@@ -10,4 +10,4 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: build
-      run: gcc main.c -o app
+      run: gcc file2c.c -o app

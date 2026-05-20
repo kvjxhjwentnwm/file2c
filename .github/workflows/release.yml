@@ -1,0 +1,24 @@
+name: Build Windows EXE
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install MinGW
+      uses: egor-tensin/setup-mingw@v2
+
+    - name: Compile
+      run: gcc file2c.c -O2 -s -o file2c.exe
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: file2c.exe

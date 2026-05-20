@@ -30,9 +30,8 @@ jobs:
       - name: Build
         run: |
           gcc file2c.c -O2 -s -static -o file2c.exe
-          zip file2c.zip file2c.exe
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: file2c.zip
+          files: file2c.exe

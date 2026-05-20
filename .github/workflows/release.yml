@@ -1,4 +1,4 @@
-name: Build Windows EXE
+name: Build EXE
 
 on:
   workflow_dispatch:
@@ -7,22 +7,29 @@ jobs:
   build:
     runs-on: windows-latest
 
+    defaults:
+      run:
+        shell: msys2 {0}
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: mingw-w64-ucrt-x86_64-gcc
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
 
-    - name: Build
-      shell: msys2 {0}
-      run: |
-        gcc file2c.c -O2 -s -static -o file2c.exe
+      - name: Check gcc
+        run: gcc --version
 
-    - name: Upload
-      uses: actions/upload-artifact@v4
-      with:
-        name: file2c
-        path: file2c.exe
+      - name: Build
+        run: gcc file2c.c -O2 -s -static -o file2c.exe
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: file2c
+          path: file2c.exe

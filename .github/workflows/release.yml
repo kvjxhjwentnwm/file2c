@@ -3,6 +3,10 @@ name: Build EXE
 on:
   workflow_dispatch:
 
+  push:
+    tags:
+      - 'v*'
+
 jobs:
   build:
     runs-on: windows-latest
@@ -22,14 +26,17 @@ jobs:
           install: >-
             mingw-w64-ucrt-x86_64-gcc
 
-      - name: Check gcc
-        run: gcc --version
-
       - name: Build
         run: gcc file2c.c -O2 -s -static -o file2c.exe
 
-      - name: Upload
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: file2c
           path: file2c.exe
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: file2c.exe
